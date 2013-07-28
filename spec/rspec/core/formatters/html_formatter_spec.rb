@@ -7,15 +7,28 @@ module RSpec
   module Core
     module Formatters
       RSpec.describe HtmlFormatter, :if => RUBY_VERSION =~ /^(1.8.7|1.9.2|1.9.3|2.0.0)$/ do
-        let(:suffix) {
-          if ::RUBY_PLATFORM == 'java'
-            "-jruby"
-          elsif defined?(Rubinius)
-            "-rbx"
+
+        it "lists its additional notifications" do
+          formatter = HtmlFormatter.new(double)
+          expect(formatter.notifications).to include(
+            :start, :example_group_started, :start_dump, :example_started,
+            :example_passed, :example_failed, :example_pending, :dump_summary
+           )
+        end
+
+        it 'removes notifications it doesnt support' do
+          formatter = HtmlFormatter.new(double)
+          expect(formatter.notifications).to_not include(:dump_failures)
+        end
+
+        let(:suffix) do
+          case
+            when ::RUBY_PLATFORM == 'java' then "-jruby"
+            when defined?(Rubinius)        then "-rbx"
           else
             ""
           end
-        }
+        end
 
         let(:root) { File.expand_path("#{File.dirname(__FILE__)}/../../../..") }
         let(:expected_file) do
