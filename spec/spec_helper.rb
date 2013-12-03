@@ -129,7 +129,7 @@ Spork.prefork do
     # Use the doc formatter when running individual files.
     # This is too verbose when running all spec files but
     # is nice for a single file.
-    if c.files_to_run.one? && c.formatters.none?
+    if c.files_to_run.one?
       c.formatter = 'doc'
     end
 
