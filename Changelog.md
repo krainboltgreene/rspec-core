@@ -9,6 +9,11 @@ Breaking Changes for 3.0.0:
   null mocking adapter. If you want to use the null mocking adapter,
   use `mock_with :nothing` (as has been documented for a long time).
   (Myron Marston)
+* Formatters are now required to implement a `notifications` method
+  returning a list of events they wish to be notified about. Notifications
+  are handled by methods matching the names on formatters. This allows
+  us to add or remove notifications without breaking existing formatters.
+  (Jon Rowe)
 
 Enhancements:
 
