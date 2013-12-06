@@ -21,7 +21,7 @@ module RSpec::Core::Formatters
 
       formatter = RSpec::Core::Formatters::DocumentationFormatter.new(output)
 
-      examples.each {|e| formatter.example_failed(e) }
+      examples.each {|e| formatter.example_failed double(:example => e) }
 
       expect(output.string).to match(/first example \(FAILED - 1\)/m)
       expect(output.string).to match(/second example \(FAILED - 2\)/m)

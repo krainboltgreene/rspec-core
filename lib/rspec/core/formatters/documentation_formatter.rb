@@ -9,32 +9,32 @@ module RSpec
           @group_level = 0
         end
 
-        def example_group_started(example_group)
-          super(example_group)
+        def example_group_started(notification)
+          super
 
           output.puts if @group_level == 0
-          output.puts "#{current_indentation}#{example_group.description.strip}"
+          output.puts "#{current_indentation}#{notification.group.description.strip}"
 
           @group_level += 1
         end
 
-        def example_group_finished(example_group)
+        def example_group_finished(notification)
           @group_level -= 1
         end
 
-        def example_passed(example)
-          super(example)
-          output.puts passed_output(example)
+        def example_passed(passed)
+          super
+          output.puts passed_output(passed.example)
         end
 
-        def example_pending(example)
-          super(example)
-          output.puts pending_output(example, example.execution_result[:pending_message])
+        def example_pending(pending)
+          super
+          output.puts pending_output(pending.example, pending.example.execution_result[:pending_message])
         end
 
-        def example_failed(example)
-          super(example)
-          output.puts failure_output(example, example.execution_result[:exception])
+        def example_failed(failure)
+          super
+          output.puts failure_output(failure.example, failure.example.execution_result[:exception])
         end
 
         def failure_output(example, exception)

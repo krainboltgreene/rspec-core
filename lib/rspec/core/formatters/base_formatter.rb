@@ -39,9 +39,9 @@ module RSpec
         # is {#example_group_started}.
         #
         # @param example_count
-        def start(example_count)
+        def start(notification)
           start_sync_output
-          @example_count = example_count
+          @example_count = notification.count
         end
 
         # @api public
@@ -54,8 +54,8 @@ module RSpec
         # {#example_pending}, or {#example_group_finished}.
         #
         # @param example_group
-        def example_group_started(example_group)
-          @example_group = example_group
+        def example_group_started(notification)
+          @example_group = notification.group
         end
 
         # @api public
@@ -63,7 +63,7 @@ module RSpec
         # Invoked at the end of the execution of each example group.
         #
         # @param example_group subclass of `RSpec::Core::ExampleGroup`
-        def example_group_finished(example_group)
+        def example_group_finished(_)
         end
 
         # @api public
@@ -72,8 +72,8 @@ module RSpec
         #
         # @param example instance of subclass of `RSpec::Core::ExampleGroup`
         # @return [Array]
-        def example_started(example)
-          examples << example
+        def example_started(notification)
+          examples << notification.example
         end
 
         # @api public
@@ -81,15 +81,15 @@ module RSpec
         # Invoked when an example passes.
         #
         # @param example instance of subclass of `RSpec::Core::ExampleGroup`
-        def example_passed(example)
+        def example_passed(_)
         end
 
         # Invoked when an example is pending.
         #
         # @param example instance of subclass of `RSpec::Core::ExampleGroup`
         # @return [Array]
-        def example_pending(example)
-          @pending_examples << example
+        def example_pending(notification)
+          @pending_examples << notification.example
         end
 
         # @api public
@@ -98,8 +98,8 @@ module RSpec
         #
         # @param example instance of subclass of `RSpec::Core::ExampleGroup`
         # @return [Array]
-        def example_failed(example)
-          @failed_examples << example
+        def example_failed(notification)
+          @failed_examples << notification.example
         end
 
         # @api public
@@ -107,7 +107,7 @@ module RSpec
         # Used by the reporter to send messages to the output stream.
         #
         # @param [String] message
-        def message(message)
+        def message(_)
         end
 
         # @api public
@@ -115,7 +115,7 @@ module RSpec
         # Invoked after all examples have executed, before dumping post-run reports.
         #
         # @return [nil]
-        def stop
+        def stop(_)
         end
 
         # @api public
@@ -125,7 +125,7 @@ module RSpec
         # (BaseTextFormatter then calls {#dump_failure} once for each failed example.)
         #
         # @return [nil]
-        def start_dump
+        def start_dump(_)
         end
 
         # @api public
@@ -133,7 +133,7 @@ module RSpec
         # Dumps detailed information about each example failure.
         #
         # @return [nil]
-        def dump_failures
+        def dump_failures(_)
         end
 
         # @api public
@@ -145,11 +145,11 @@ module RSpec
         # @param example_count
         # @param failure_count
         # @param pending_count
-        def dump_summary(duration, example_count, failure_count, pending_count)
-          @duration = duration
-          @example_count = example_count
-          @failure_count = failure_count
-          @pending_count = pending_count
+        def dump_summary(summary)
+          @duration      = summary.duration
+          @example_count = summary.examples
+          @failure_count = summary.failures
+          @pending_count = summary.pending
         end
 
         # @api public
@@ -158,7 +158,7 @@ module RSpec
         # after the summary if option is set to do so.
         #
         # @return [nil]
-        def dump_pending
+        def dump_pending(_)
         end
 
         # @api public
@@ -167,18 +167,18 @@ module RSpec
         # when using `--profile COUNT` (default 10).
         #
         # @return [nil]
-        def dump_profile
+        def dump_profile(_)
         end
 
         # @private not intended for use outside RSpec.
-        def seed(number)
+        def seed(_)
         end
 
         # @api public
         #
         # Invoked at the very end, `close` allows the formatter to clean
         # up resources, e.g. open streams, etc.
-        def close
+        def close(_)
           restore_sync_output
         end
 

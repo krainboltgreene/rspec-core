@@ -2,7 +2,9 @@ require 'spec_helper'
 require 'rspec/core/formatters/base_text_formatter'
 
 RSpec.describe RSpec::Core::Formatters::BaseTextFormatter do
-  let(:output) { StringIO.new }
+  let(:output)    { StringIO.new }
+  let(:config)    { RSpec::Core::Configuration.new }
+  let(:reporter)  { RSpec::Core::Reporter.new config, formatter }
   let(:formatter) { RSpec::Core::Formatters::BaseTextFormatter.new(output) }
 
   describe "#summary_line" do
@@ -25,7 +27,7 @@ RSpec.describe RSpec::Core::Formatters::BaseTextFormatter do
         it("fails") { fail }
       end
       line = __LINE__ - 2
-      group.run(formatter)
+      group.run(reporter)
       formatter.dump_commands_to_rerun_failed_examples
       expect(output.string).to include("rspec #{RSpec::Core::Metadata::relative_path("#{__FILE__}:#{line}")} # example group fails")
     end
@@ -37,8 +39,8 @@ RSpec.describe RSpec::Core::Formatters::BaseTextFormatter do
     before { allow(RSpec.configuration).to receive(:color_enabled?) { false } }
 
     def run_all_and_dump_failures
-      group.run(formatter)
-      formatter.dump_failures
+      group.run(reporter)
+      formatter.dump_failures double("notification")
     end
 
     it "preserves formatting" do
@@ -153,8 +155,8 @@ RSpec.describe RSpec::Core::Formatters::BaseTextFormatter do
     before { allow(RSpec.configuration).to receive(:color_enabled?) { false } }
 
     def run_all_and_dump_pending
-      group.run(formatter)
-      formatter.dump_pending
+      group.run(reporter)
+      formatter.dump_pending double("notification")
     end
 
     context "with show_failures_in_pending_blocks setting enabled" do
@@ -362,7 +364,7 @@ RSpec.describe RSpec::Core::Formatters::BaseTextFormatter do
         config.tty = true
         config.success_color = :cyan
       end
-      formatter.dump_summary(0,1,0,0)
+      formatter.dump_summary double("summary", :duration => 0, :examples => 1, :failures => 0, :pending => 0)
       expect(output.string).to include("\e[36m")
     end
   end

@@ -15,7 +15,7 @@ module RSpec
           output.puts message
         end
 
-        def dump_failures
+        def dump_failures(notification)
           return if failed_examples.empty?
           output.puts
           output.puts "Failures:"
@@ -42,11 +42,11 @@ module RSpec
           end
         end
 
-        def dump_summary(duration, example_count, failure_count, pending_count)
-          super(duration, example_count, failure_count, pending_count)
-          dump_profile unless mute_profile_output?(failure_count)
-          output.puts "\nFinished in #{format_duration(duration)}\n"
-          output.puts colorise_summary(summary_line(example_count, failure_count, pending_count))
+        def dump_summary(summary)
+          super
+          dump_profile unless mute_profile_output?(summary.failures)
+          output.puts "\nFinished in #{format_duration(summary.duration)}\n"
+          output.puts colorise_summary(summary_line(summary.examples, summary.failures, summary.pending))
           dump_commands_to_rerun_failed_examples
         end
 
@@ -114,7 +114,7 @@ module RSpec
           summary
         end
 
-        def dump_pending
+        def dump_pending(notification)
           unless pending_examples.empty?
             output.puts
             output.puts "Pending:"
@@ -131,13 +131,14 @@ module RSpec
           end
         end
 
-        def seed(number)
+        def seed(notification)
+          return unless notification.seed_used?
           output.puts
-          output.puts "Randomized with seed #{number}"
+          output.puts "Randomized with seed #{notification.seed}"
           output.puts
         end
 
-        def close
+        def close(notification)
           output.close if IO === output && output != $stdout
         end
 
