@@ -52,8 +52,12 @@
 # @see RSpec::Core::Reporter
 module RSpec::Core::Formatters
 
-  # Manages formatters for a configuration for internal use only
   # @api private
+  #
+  # `RSpec::Core::Formatters::Collection` is an internal class for
+  # managing formatters used by a particular configuration. It is
+  # not expected to be used directly, but only through the configuration
+  # interface
   class Collection
 
     # @api private
