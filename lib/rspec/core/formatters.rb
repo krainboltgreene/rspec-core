@@ -63,7 +63,7 @@ module RSpec::Core::Formatters
     end
 
     # @api private
-    def setup_default output_stream, deprecation_stream
+    def setup_default(output_stream, deprecation_stream)
       if @formatters.empty?
         add 'progress', output_stream
       end
@@ -71,7 +71,7 @@ module RSpec::Core::Formatters
     end
 
     # @api private
-    def add formatter_to_use, *paths
+    def add(formatter_to_use, *paths)
       formatter_class =
         built_in_formatter(formatter_to_use) ||
         custom_formatter(formatter_to_use) ||
