@@ -52,7 +52,11 @@
 # @see RSpec::Core::Reporter
 module RSpec::Core::Formatters
 
+  # Manages formatters for a configuration for internal use only
+  # @api private
   class Collection
+
+    # @api private
     def initialize(reporter)
       @formatters = []
       @reporter = reporter
@@ -88,6 +92,9 @@ module RSpec::Core::Formatters
       @formatters.clear
     end
 
+    # Returns true if there are no configured formatters.
+    # @return boolean
+    # @api public
     def empty?
       @formatters.empty?
     end
